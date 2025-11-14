@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import {
   Card,
@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useMoodTheme } from "@/hooks/useMoodTheme";
 import { useMoodStyle } from "@/hooks/useMoodStyle";
+import { supabase } from "@/supabase-client";
 
 const moods: Array<Parameters<typeof useMoodStyle>[0]> = [
   "happy",
@@ -34,6 +35,15 @@ export function HomePage() {
     baseThemeTokens,
   } = useMoodTheme();
   const moodClasses = useMoodStyle(mood);
+
+  useEffect(() => {
+    async function readUsers() {
+      const { data, error } = await supabase.from("moods").select("*");
+      console.log("Users data:", data);
+      console.log("Error:", error);
+    }
+    readUsers();
+  }, []);
 
   return (
     <>
